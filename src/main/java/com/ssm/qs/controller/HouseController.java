@@ -24,6 +24,7 @@ public class HouseController {
         return "/releaseHouse.jsp";
     }
 
+    //1.
     @RequestMapping("findAllHouse")
     @ResponseBody
     public Map<String,Object> findAllHouse(){
@@ -34,6 +35,7 @@ public class HouseController {
         return result;
     }
 
+    //2.
     @RequestMapping("selectHouse")
     @ResponseBody
     public Map<String,Object> selectHouse(House house){

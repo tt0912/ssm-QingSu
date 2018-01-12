@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingsu.house.dao.HouseDao">
+
+    <resultMap id="houseMap" type="House">
+        <id column="ID" property="id"/>
+        <result column="INTRODUCE" property="introduce"/>
+        <result column="STYLE" property="style"/>
+        <result column="PLACE" property="place"/>
+        <result column="PRICE" property="price"/>
+        <result column="STATUS" property="status"/>
+        <result column="TITLE" property="title"/>
+        <result column="EVALUATE" property="evaluate"/>
+        <result column="HOUSE_URL" property="houseUrl"/>
+        <result column="USER_ID" property="user.id"/>
+
+        <association property="user" javaType="User">
+            <id column="USER_ID" property="id"/>
+            <result column="PHONE" property="phone"/>
+            <result column="EMAIL" property="email"/>
+        </association>
+    </resultMap>
+
+
+
+    <select id="findAllHouse" resultMap="houseMap">
+        SELECT ID,INTRODUCE,STYLE,PLACE,STATUS,TITLE,EVALUATE,HOUSE_URL,USER_ID,
+        FROM HOUSE
+    </select>
+
+
+    <select id="selectHouse" parameterType="House" resultMap="houseMap">
+        SELECT ID,INTRODUCE,STYLE,PLACE,STATUS,TITLE,EVALUATE,HOUSE_URL,USER_ID,
+        FROM HOUSE
+        <where>
+            <if test="status!=null and status!=''">STATUS=#{status}</if>
+            <if test="place!=null and place!=''">and PLACE like concat('%',#{place},'%')</if>
+            <if test="title!=null and title!=''">and TITLE like concat('%',#{title},'%')</if>
+        </where>
+    </select>
+
+    <insert id="addHouse" parameterType="House" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO HOUSE(INTRODUCE,STYLE,PLACE,STATUS,TITLE,HOUSE_URL,USER_ID)
+        VALUES (#{introduce},#{style},#{place},1,#{title},#{houseUrl},#{userId})
+    </insert>
+
+
+</mapper>

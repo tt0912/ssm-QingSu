@@ -1,15 +1,15 @@
 package com.ssm.qs.service.impl;
 
-import com.qingsu.house.dao.HouseDao;
-import com.qingsu.house.pojo.House;
-import com.qingsu.house.service.HouseService;
+import com.ssm.qs.dao.HouseDao;
+import com.ssm.qs.pojo.House;
+import com.ssm.qs.service.HouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class HouseServiceImpl implements HouseService{
+public class HouseServiceImpl implements HouseService {
 
     @Autowired
     private HouseDao houseDao;

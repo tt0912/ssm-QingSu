@@ -28,18 +28,19 @@ public class UserController {
     private UserService userService;
     //声明结果容器
     Map<String,Object> result = new HashMap<>();
+    //回调验证码
+    String mobileCode = null;
 
-    //1.ajax请求发送验证码
+    //1.ajax请求发送验证码(已测试)
     @RequestMapping("/send_login_code.html")
     @ResponseBody
-    public Map<String,Object> sendsms(String phone, HttpSession session) throws Exception{
+    public Map<String, Object> sendsms(String phone) throws Exception {
 
         result.put("success",true);//请求成功
         Map<String,String> map = Sendsms.send(phone);
         String code = map.get("code");//状态码
-        String mobileCode = map.get("mobile_code");//发送的验证码
+        mobileCode = map.get("mobile_code");//发送的验证码
         if("2".equals(code)){//验证码发送成功，存入session(默认30分钟有效)
-            session.setAttribute("mobileCode",mobileCode);
             result.put("result",true);
             result.put("error",null);
         }else{//发送失败，手动抛出异常，全局异常进行处理
@@ -48,12 +49,11 @@ public class UserController {
         return result;
     }
 
-    //2.验证码登录(局部)
+    //2.验证码登录(局部)(已测试)
     @RequestMapping("/code_login.html")
     @ResponseBody
-    public Map<String, Object> codeLogin(String phone, String code, HttpSession session, HttpServletResponse response) throws Exception {
+    public Map<String, Object> codeLogin(String phone, String code) throws Exception {
 
-        String mobileCode = (String)session.getAttribute("mobileCode");
         //1.二次校验
         if(phone==null || phone==""){
             throw new Exception("必须输入手机号");
@@ -69,15 +69,13 @@ public class UserController {
             int id = 0;
 
             if (user_find == null) {//2.1 没有该用户信息，注册
-                String name = "用户" + phone.substring(8);//用户6012
+                String name = "用户" + phone.substring(7);//用户6012
                 user.setUserName(name);
                 user.setNickName(name);
                 user.setRealName(name);
                 id = userService.addUser(user);//插入成功，返回id
-                session.setAttribute("SESSION_USER",user);
             }else{//2.1 直接登录
                 id = user_find.getId();
-                session.setAttribute("SESSION_USER",user_find);
             }
             //3.票据对应id插入数据库
             String ticket = UUID.randomUUID().toString().replaceAll("-","");
@@ -102,7 +100,7 @@ public class UserController {
     }
 
 
-    //3.密码登录(用户名，邮箱，手机号)
+    //3.密码登录(用户名，邮箱，手机号)(已测试)
     @RequestMapping("/pwd_login.html")
     @ResponseBody
     public Map<String,Object> pwdLogin(User user) throws Exception{
@@ -129,7 +127,7 @@ public class UserController {
 
             Map<String,Object> map = new HashMap<>();
             map.put("ticket",ticket);
-            map.put("uid",user1.getId());
+            map.put("uid", user1.getId());//对应用户id
 
             result.put("result",map);
             result.put("error",null);
@@ -140,12 +138,11 @@ public class UserController {
     }
 
 
-    //4.忘记密码(设置新密码)
+    //4.忘记密码(设置新密码)(已测试)
     @RequestMapping("/forget_pwd.html")
     @ResponseBody
-    public Map<String,Object> update(String phone,String code,String password,HttpSession session) throws Exception{
+    public Map<String, Object> update(String phone, String code, String password) throws Exception {
 
-        String mobileCode = (String)session.getAttribute("mobileCode");
         if(phone==null || phone==""){
             throw new Exception("必须输入手机号");
         }
@@ -157,7 +154,7 @@ public class UserController {
         }
         if(mobileCode.equals(code)) {//验证通过
             User user = new User();
-            user.setPhone(phone);
+            user.setPhone(phone);//根据手机号修改密码，同样是唯一标识
             user.setPassword(password);
             userService.updateUser(user);
         }else {
@@ -170,18 +167,44 @@ public class UserController {
     }
 
 
-    //5.退出登录(session失效，删数据库票据)
+    //5.退出登录(删数据库票据)(已测试)
     @RequestMapping("/logout.html")
-    public Map<String,Object> delete(String ticket,HttpSession session){
+    @ResponseBody
+    public Map<String, Object> delete(String ticket) {
 
-        //1.session失效
-        session.invalidate();
-        //2.删票据
+        //1.删票据
         userService.deleteTicket(ticket);
-        //3.返回结果
+        //2.返回结果
         result.put("success",true);
         result.put("result","退出成功");
         result.put("error",null);
         return result;
     }
+
+    //6.获取用户信息:
+    @RequestMapping("/show.html")
+    @ResponseBody
+    public Map<String, Object> showInfo(String ticket) {
+
+        //1.根据票据查id;
+        int id = userService.getUID(ticket);
+
+        //2.根据id查全部数据
+        User user = new User();
+        user.setId(id);
+        User user1 = userService.getUser(user);
+        System.out.println(user1);
+
+        result.put("success", true);
+        result.put("user", user1);
+        result.put("error", null);
+        return result;
+    }
+
+    //7.修改头像
+
+
+    //8.修改用户信息
+
+
 }

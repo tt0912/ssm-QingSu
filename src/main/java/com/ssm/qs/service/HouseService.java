@@ -1,6 +1,6 @@
 package com.ssm.qs.service;
 
-import com.qingsu.house.pojo.House;
+import com.ssm.qs.pojo.House;
 
 import java.util.List;
 

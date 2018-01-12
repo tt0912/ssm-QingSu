@@ -28,7 +28,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter{
         String ticket = request.getParameter("ticket");
         if(ticket!=null && ticket!=""){
             //3.查数据库中有没有
-            int uid = userDao.getTicket(ticket);
+            int uid = userDao.getUID(ticket);
             if (uid>0){
                 User user1 = new User();
                 user1.setId(uid);
@@ -37,7 +37,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter{
                 return true;
             }
         }
-        response.sendRedirect(request.getContextPath()+"/login.jsp");//请登录
+        response.getWriter().write("请登录");
         return false;
     }
 }

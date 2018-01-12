@@ -14,6 +14,9 @@ public interface UserService {
     //3.插入登录票据
     int addTicket(Info info);
 
+    //4.根据票据查uid
+    int getUID(String ticket);
+
     //5.更新密码
     void updateUser(User user);
 

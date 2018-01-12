@@ -15,7 +15,7 @@ public interface UserDao {
     int addTicket(Info info);
 
     //4.查票据
-    int getTicket(String ticket);
+    int getUID(String ticket);
 
     //5.更新密码
     void updateUser(User user);

@@ -1,7 +1,8 @@
 package com.ssm.qs.controller;
 
-import com.qingsu.house.pojo.House;
-import com.qingsu.house.service.HouseService;
+
+import com.ssm.qs.pojo.House;
+import com.ssm.qs.service.HouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

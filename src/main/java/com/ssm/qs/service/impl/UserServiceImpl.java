@@ -29,6 +29,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public int getUID(String ticket) {
+        return userDao.getUID(ticket);
+    }
+
+    @Override
     public void updateUser(User user) {
         userDao.updateUser(user);
     }

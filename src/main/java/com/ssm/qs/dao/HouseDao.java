@@ -1,6 +1,6 @@
 package com.ssm.qs.dao;
 
-import com.ssm.qs.pojo.House;
+import com.qingsu.house.pojo.House;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ public interface HouseDao {
 
     void addHouse(House house);
 
-
+    House findHouseById(Integer id);
 }

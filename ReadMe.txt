@@ -26,3 +26,77 @@
 
     2.5 微信登录
 
+
+
+表：
+    1.订单
+        订单id:id
+        下单时间：createdDate
+        订单状态：status
+        订单编号：orderNum:2323124241
+        支付编号：tradeNum:2312321421
+        支付时间：payTime:231241412
+        折扣：discount:15.0
+        原始金额：orginal
+        实际金额：actual
+        用户id:userId
+        优惠券id：
+        房源id：一对一
+
+        1.1 创建订单
+        ticket/cid/hid
+
+
+
+    2.房源信息展示
+        id;
+        title:
+        style;户型
+        introduce;详情
+        place;省
+        地标：模糊查询
+        status;是否可定
+        houseUrl:房源图片
+        userId;房东
+        price;
+
+
+    3.评价
+        id
+        评价内容
+        回复内容
+        house_id
+        user_id
+
+
+    4.优惠券(完成)
+        id
+        type:1(满减券)/0(打折券)
+        name:满20减5元
+        startTime:有效期//用来判断是否过期
+        endTime:有效期//遍历没有过期的优惠券
+        discountAmount:5(满)/0.8(打折券)
+        condition:20(使用条件)
+
+        领了的，加入中间表关系
+        已用的或者过期的删除表关系
+
+        4.1 展示所有优惠券
+        4.2 领取优惠券(建立表关系)
+            ticket,cid
+        4.3 展示我的可用优惠券
+            ticket：我的
+            startTime <= now()<=endTime:在有效期内
+            condition<=price 满减的金额小于=房子的单价
+        4.4 展示我的订单可用的优惠券
+
+
+
+
+首页
+    0.用户手动输入城市，入住日期搜索(模糊查询)
+
+    1.热门玩法(不查数据库，静态页面跳转)
+    2.景点房源推荐(给id，返回房源全部信息)
+    3.特色体验(静态页面跳转)
+    4.房东故事，静态页面

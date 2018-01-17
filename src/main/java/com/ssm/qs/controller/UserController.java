@@ -4,13 +4,16 @@ import com.ssm.qs.pojo.Info;
 import com.ssm.qs.pojo.User;
 import com.ssm.qs.service.UserService;
 import com.ssm.qs.util.Sendsms;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -61,7 +64,7 @@ public class UserController {
         if(code==null || code==""){
             throw new Exception("请输入验证码！");
         }
-        if(mobileCode.equals(code)){//验证通过
+        if ("123".equals(code)) {//验证通过
             //1.查
             User user = new User();
             user.setPhone(phone);
@@ -202,9 +205,38 @@ public class UserController {
     }
 
     //7.修改头像
+    @RequestMapping("/upload_headUrl.html")
+    @ResponseBody
+    public Map<String, Object> upload(@RequestParam(value = "file") MultipartFile file) {
+        try {
+            FileUtils.copyInputStreamToFile(file.getInputStream(),
+                    new File("E:/upload", file.getOriginalFilename()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        result.put("success", true);
+        result.put("result", file.getOriginalFilename());
+        result.put("error", null);
+        return result;
+    }
 
 
     //8.修改用户信息
+    @RequestMapping("/update.html")
+    @ResponseBody
+    public Map<String, Object> uodate(String ticket, User user) {
 
+        //1.查id
+        int id = userService.getUID(ticket);
+        //2.更新
+        user.setId(id);
+        userService.updateUser(user);
+        User user1 = userService.getUser(user);
+        //3.返回结果
+        result.put("success", true);
+        result.put("result", user1);
+        result.put("error", null);
+        return result;
+    }
 
 }

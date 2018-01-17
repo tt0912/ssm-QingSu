@@ -1,8 +1,10 @@
 package com.ssm.qs.service.impl;
 
-import com.ssm.qs.dao.HouseDao;
-import com.ssm.qs.pojo.House;
-import com.ssm.qs.service.HouseService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.qingsu.house.dao.HouseDao;
+import com.qingsu.house.pojo.House;
+import com.qingsu.house.service.HouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,20 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
-    public List<House> selectHouse(House house) {
-        return houseDao.selectHouse(house);
+    public PageInfo<House> selectHouse(House house, Integer pageNum) {
+        PageHelper.startPage(pageNum, 5);
+        List<House> houseList = houseDao.selectHouse(house);
+        PageInfo<House> pageInfo = new PageInfo<>(houseList);
+        return pageInfo;
     }
 
     @Override
     public void addHouse(House house) {
         houseDao.addHouse(house);
+    }
+
+    @Override
+    public House findHouseById(Integer id) {
+        return houseDao.findHouseById(id);
     }
 }

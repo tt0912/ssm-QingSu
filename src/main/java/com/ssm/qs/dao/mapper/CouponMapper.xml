@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.qs.dao.CouponDao">
+    <resultMap id="couponMap" type="Coupon">
+        <id property="id" column="ID"></id>
+        <result property="type" column="TYPE"></result>
+        <result property="name" column="NAME"></result>
+        <result property="startTime" column="START_TIME"></result>
+        <result property="endTime" column="END_TIME"></result>
+        <result property="discountAmount" column="DISCOUNT_AMOUNT"></result>
+        <result property="condition" column="CONDITION"></result>
+    </resultMap>
+    <!--1.查所有优惠券-->
+    <select id="getCouponList" resultMap="couponMap">
+        SELECT ID,`TYPE`,`NAME`,START_TIME,END_TIME,DISCOUNT_AMOUNT,`CONDITION` FROM COUPON
+    </select>
+    <!--2.领取优惠券：插入到关系表-->
+    <insert id="gainCoupon" parameterType="Info">
+        INSERT INTO COUPON_USER(UID,CID) VALUES (#{uid},#{cid})
+    </insert>
+    <!--3.查询用户所拥有的优惠券-->
+    <select id="showCoupon" parameterType="String" resultMap="couponMap">
+        SELECT C.ID,C.`TYPE`,C.`NAME`,C.START_TIME,C.END_TIME,C.DISCOUNT_AMOUNT,C.`CONDITION`
+        FROM COUPON C,COUPON_USER CS,INFO I
+        WHERE C.ID=CS.UID AND CS.UID = I.UID
+        AND I.TICKET=#{ticket}
+        AND NOW() &lt;= C.END_TIME
+    </select>
+    <!--4.下订单时的可用优惠券-->
+    <select id="useCoupon" parameterType="Info" resultMap="couponMap">
+        SELECT C.ID,C.`TYPE`,C.`NAME`,C.START_TIME,C.END_TIME,C.DISCOUNT_AMOUNT,C.`CONDITION`
+        FROM COUPON C,COUPON_USER CS,INFO I
+        WHERE C.ID=CS.CID AND CS.UID = I.UID
+        AND I.TICKET=#{ticket}
+        AND C.START_TIME &lt;= NOW() &lt;= C.END_TIME
+        AND C.`CONDITION`&lt;=(SELECT PRICE FROM HOUSE WHERE ID=#{hid})
+    </select>
+</mapper>

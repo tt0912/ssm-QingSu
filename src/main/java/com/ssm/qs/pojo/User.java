@@ -8,12 +8,13 @@ public class User {
     private String nickName;
     private String realName;
     private String gender;
-    private String email;
+    private Integer age;
     private String phone;
     private String nation;
     private String city;
     private String profession;
     private String introduce;
+    private String headUrl;
 
     public Integer getId() {
         return id;
@@ -63,12 +64,12 @@ public class User {
         this.gender = gender;
     }
 
-    public String getEmail() {
-        return email;
+    public Integer getAge() {
+        return age;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public String getPhone() {
@@ -111,6 +112,14 @@ public class User {
         this.introduce = introduce;
     }
 
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -120,12 +129,13 @@ public class User {
                 ", nickName='" + nickName + '\'' +
                 ", realName='" + realName + '\'' +
                 ", gender='" + gender + '\'' +
-                ", email='" + email + '\'' +
+                ", age=" + age +
                 ", phone='" + phone + '\'' +
                 ", nation='" + nation + '\'' +
                 ", city='" + city + '\'' +
                 ", profession='" + profession + '\'' +
                 ", introduce='" + introduce + '\'' +
+                ", headUrl='" + headUrl + '\'' +
                 '}';
     }
 }

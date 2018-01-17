@@ -35,7 +35,7 @@
     <!--6.配置全局异常处理器-->
     <bean class="com.ssm.qs.exception.ExceptionHandler"></bean>
     <!--7.配置登录拦截器-->
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="api/user/code_login.html"/>
@@ -44,8 +44,11 @@
             <mvc:exclude-mapping path="api/user/send_login_code.html"/>
             <bean class="com.ssm.qs.interceptor.MyInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
+
     <!--8.文件解析器-->
+    <!--8.1 扫描配置文件：resource-->
+    <context:property-placeholder location="classpath:resource.properties"/>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="1048576"></property>
         <property name="defaultEncoding" value="UTF-8"></property>

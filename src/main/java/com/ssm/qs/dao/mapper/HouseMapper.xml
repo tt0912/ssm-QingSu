@@ -6,43 +6,84 @@
         <id column="ID" property="id"/>
         <result column="INTRODUCE" property="introduce"/>
         <result column="STYLE" property="style"/>
-        <result column="PLACE" property="place"/>
+        <result column="CITY" property="city"/>
         <result column="PRICE" property="price"/>
         <result column="STATUS" property="status"/>
         <result column="TITLE" property="title"/>
-        <result column="EVALUATE" property="evaluate"/>
         <result column="HOUSE_URL" property="houseUrl"/>
         <result column="USER_ID" property="user.id"/>
+        <result column="LANDMARK" property="landMark"/>
+        <result column="LON" property="lon"/>
+        <result column="LAT" property="lat"/>
 
         <association property="user" javaType="User">
             <id column="USER_ID" property="id"/>
             <result column="PHONE" property="phone"/>
-            <result column="EMAIL" property="email"/>
+            <result column="USERNAME" property="userName"/>
         </association>
     </resultMap>
 
 
 
     <select id="findAllHouse" resultMap="houseMap">
-        SELECT ID,INTRODUCE,STYLE,PLACE,STATUS,TITLE,EVALUATE,HOUSE_URL,USER_ID,
-        FROM HOUSE
+        SELECT h.ID,h.INTRODUCE,h.STYLE,h.CITY,h.STATUS,h.TITLE,h.HOUSE_URL,h.USER_ID,
+        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USERNAME
+        FROM HOUSE h INNER JOIN USER u ON h.USER_ID=u.ID
     </select>
 
 
     <select id="selectHouse" parameterType="House" resultMap="houseMap">
-        SELECT ID,INTRODUCE,STYLE,PLACE,STATUS,TITLE,EVALUATE,HOUSE_URL,USER_ID,
-        FROM HOUSE
+        SELECT h.ID,h.INTRODUCE,h.STYLE,h.CITY,h.STATUS,h.TITLE,h.HOUSE_URL,h.USER_ID,
+        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USERNAME
+        FROM HOUSE h INNER JOIN USER u ON h.USER_ID=u.ID
         <where>
-            <if test="status!=null and status!=''">STATUS=#{status}</if>
-            <if test="place!=null and place!=''">and PLACE like concat('%',#{place},'%')</if>
+            <if test="status!=null and status!=''">and h.STATUS=#{status}</if>
+            <if test="city!=null and city!=''">and CITY like concat('%',#{city},'%')</if>
             <if test="title!=null and title!=''">and TITLE like concat('%',#{title},'%')</if>
+            <if test="landMark!=null and landMark!=''">and LANDMARK like concat('%',#{landMark},'%')</if>
+            <if test="minPrice!=null">and PRICE &gt;=#{minPrice}</if>
+            <if test="maxPrice!=null">and PRICE &lt;=#{maxPrice}</if>
         </where>
     </select>
 
     <insert id="addHouse" parameterType="House" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO HOUSE(INTRODUCE,STYLE,PLACE,STATUS,TITLE,HOUSE_URL,USER_ID)
-        VALUES (#{introduce},#{style},#{place},1,#{title},#{houseUrl},#{userId})
+        INSERT INTO HOUSE(INTRODUCE,STYLE,STATUS,TITLE,HOUSE_URL,USER_ID,LON,LAT)
+        VALUES (#{introduce},#{style},1,#{title},#{houseUrl},#{userId},#{lon},#{lat})
     </insert>
 
+    <select id="findHouseById" parameterType="int" resultMap="houseMap">
+        SELECT h.ID,h.INTRODUCE,h.STYLE,h.CITY,h.STATUS,h.TITLE,h.HOUSE_URL,h.USER_ID,
+        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USERNAME
+        FROM HOUSE h INNER JOIN USER u ON h.USER_ID=u.ID
+        WHERE h.ID=#{id}
+    </select>
+
+    <select id="findHouseByLocation" parameterType="House" resultMap="houseMap">
+        SELECT ID,INTRODUCE,STYLE,CITY,STATUS,TITLE,HOUSE_URL,USER_ID,LANDMARK,LON,LAT,
+        ROUND(6378.138 * 2 * ASIN(
+        SQRT(
+        POW(
+        SIN(
+        (
+        LAT * PI()/180-LAT * PI()/180
+        )/2
+        ),
+        2
+        )+COS(LAT * PI()/180 * COS(LAT * PI()/180) * POW(
+        SIN(
+        (
+        LON * PI()/180-LON * PI()/180
+        )/2
+        ),
+        2
+        ))
+        ) * 1000
+        ) AS JULI
+        FROM HOUSE HAVING JULI>500 ORDER BY JULI ASC LIMIT 10
+        <where>
+            <if test="lon!=null">LON=#{lon}</if>
+            <if test="lat!=null">AND LAT=#{lat}</if>
+        </where>
+    </select>
 
 </mapper>

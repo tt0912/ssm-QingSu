@@ -6,14 +6,66 @@ public class House {
     private Integer id;
     private String introduce;
     private String style;
-    private String place;
+    private String city;
     private Double price;
     private Integer status;
     private String title;
-    private String evaluate;
-    private String houseUrl;
+    private String houseUrl;//房源照片
     private Integer userId;
     private User user;
+    private String landMark;//地标
+    private Double minPrice;
+    private Double maxPrice;
+    private Double lon;//精度
+    private Double lat;//纬度
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Double getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(Double minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public Double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(Double maxPrice) {
+        this.maxPrice = maxPrice;
+    }
+
+    public String getLandMark() {
+        return landMark;
+    }
+
+    public void setLandMark(String landMark) {
+        this.landMark = landMark;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -63,14 +115,6 @@ public class House {
         this.style = style;
     }
 
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
     public Double getPrice() {
         return price;
     }
@@ -95,11 +139,4 @@ public class House {
         this.title = title;
     }
 
-    public String getEvaluate() {
-        return evaluate;
-    }
-
-    public void setEvaluate(String evaluate) {
-        this.evaluate = evaluate;
-    }
 }

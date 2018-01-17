@@ -16,12 +16,13 @@ public class OrderController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("create_order.html")
+    /*@RequestMapping("create_order.html")
     @ResponseBody
     public Map<String, Object> create(String ticket, Order order) {
 
         //1.根据票据拿id
         int userId = userService.getUID(ticket);
         order.setUserId(userId);
-    }
+        return ;
+    }*/
 }

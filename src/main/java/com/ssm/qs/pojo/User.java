@@ -15,6 +15,15 @@ public class User {
     private String profession;
     private String introduce;
     private String headUrl;
+    private Integer houseId;
+
+    public Integer getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(Integer houseId) {
+        this.houseId = houseId;
+    }
 
     public Integer getId() {
         return id;

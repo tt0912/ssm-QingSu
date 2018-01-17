@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.qingsu.house.dao.HouseDao">
+<mapper namespace="com.ssm.qs.dao.HouseDao">
 
     <resultMap id="houseMap" type="House">
         <id column="ID" property="id"/>
@@ -38,7 +38,7 @@
         FROM HOUSE h INNER JOIN USER u ON h.USER_ID=u.ID
         <where>
             <if test="status!=null and status!=''">and h.STATUS=#{status}</if>
-            <if test="city!=null and city!=''">and CITY like concat('%',#{city},'%')</if>
+            <if test="city!=null and city!=''">and h.CITY like concat('%',#{city},'%')</if>
             <if test="title!=null and title!=''">and TITLE like concat('%',#{title},'%')</if>
             <if test="landMark!=null and landMark!=''">and LANDMARK like concat('%',#{landMark},'%')</if>
             <if test="minPrice!=null">and PRICE &gt;=#{minPrice}</if>

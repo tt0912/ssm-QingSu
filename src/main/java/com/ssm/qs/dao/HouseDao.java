@@ -1,6 +1,7 @@
 package com.ssm.qs.dao;
 
-import com.qingsu.house.pojo.House;
+
+import com.ssm.qs.pojo.House;
 
 import java.util.List;
 

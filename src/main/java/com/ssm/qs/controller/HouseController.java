@@ -82,10 +82,12 @@ public class HouseController {
     //添加房源信息，已经过测试
     @RequestMapping("addHouse")
     @ResponseBody
-    public Map<String,Object> addHouse(House house){
+    public Map<String,Object> addHouse(House house,String ticket){
         Map<String,Object> result=new HashMap<>();
+        //1.拿id
+        int id = userService.getUID(ticket);
         if(house.getId()==null){
-            house.setUserId(2);//暂时写死，等用户登录后从session中取得userId注入(HttpSession session.getUserid())
+            house.setUserId(id);
             houseService.addHouse(house);
             result.put("success", true);
             result.put("error", null);
@@ -100,14 +102,21 @@ public class HouseController {
     //收藏夹，用户收藏房源，已测试
     @RequestMapping("addCollection")
     @ResponseBody
-    public Map<String, Object> addCollection(Integer houseId) {//前端隐藏域传用户点击收藏的房子的id，name=houseId
+    public Map<String, Object> addCollection(Integer houseId,String ticket) {//前端隐藏域传用户点击收藏的房子的id，name=houseId
         Map<String, Object> result = new HashMap<>();
+
+        //1.根据票据查id;
+        int id = userService.getUID(ticket);
+
+        //2.根据id查全部数据
+        User user = new User();
+        user.setId(id);
+        User user1 = userService.getUser(user);
+
         if (houseId != null) {
-            User user = new User();//获得用户信息，暂时新建，这个用户其时是登陆的用户
-            user.setId(1);
-            System.out.println(user.getId() + "--------------------------------");
-            user.setHouseId(houseId);
-            userService.addCollection(user);
+
+            user1.setHouseId(houseId);
+            userService.addCollection(user1);
             result.put("success", true);
             result.put("error", null);
             result.put("message", "收藏成功");
@@ -121,12 +130,13 @@ public class HouseController {
     //展示收藏夹，展示用户收藏的内容，已测试
     @RequestMapping("findCollection")
     @ResponseBody
-    public Map<String, Object> findCollection() {
+    public Map<String, Object> findCollection(String ticket) {
         Map<String, Object> result = new HashMap<>();
-        User user = new User();//获得用户信息，暂时新建，这个用户其时是登陆的用户
-        user.setId(1);
-        Integer id = user.getId();
-        if (id != null) {
+
+        //1.根据票据查id;
+        int id = userService.getUID(ticket);
+
+        if (id != 0) {
             List<House> houses = userService.findCollection(id);
             result.put("result", houses);
             result.put("success", true);
@@ -142,13 +152,21 @@ public class HouseController {
     //用户浏览记录，将浏览记录保存到数据库中
     @RequestMapping("addBrowse")
     @ResponseBody
-    public Map<String, Object> addBrowse(Integer houseId) {//前端隐藏域传用户点击过的房子的id，name=houseId
+    public Map<String, Object> addBrowse(Integer houseId,String ticket) {//前端隐藏域传用户点击过的房子的id，name=houseId
         Map<String, Object> result = new HashMap<>();
+
+        //1.根据票据查id;
+        int id = userService.getUID(ticket);
+
+        //2.根据id查全部数据
+        User user = new User();
+        user.setId(id);
+        User user1 = userService.getUser(user);
+
         if (houseId != null) {
-            User user = new User();//获得用户信息，暂时新建，这个用户其时是登陆的用户
-            user.setId(1);
-            user.setHouseId(houseId);
-            userService.addBrowse(user);
+
+            user1.setHouseId(houseId);
+            userService.addBrowse(user1);
             result.put("success", true);
             result.put("error", null);
             result.put("message", "添加成功");
@@ -162,12 +180,13 @@ public class HouseController {
     //用户点击浏览记录，将用户查看过的房子的按照时间的降序顺序从数据库中回显出来
     @RequestMapping("findBrowse")
     @ResponseBody
-    public Map<String, Object> findBrowse() {
+    public Map<String, Object> findBrowse(String ticket) {
         Map<String, Object> result = new HashMap<>();
-        User user = new User();//获得用户信息，暂时新建，这个用户其时是登陆的用户
-        user.setId(1);
-        Integer id = user.getId();
-        if (id != null) {
+
+        //1.根据票据查id;
+        int id = userService.getUID(ticket);
+
+        if (id != 0) {
             List<House> houses = userService.findBrowse(id);
             result.put("result", houses);
             result.put("success", true);

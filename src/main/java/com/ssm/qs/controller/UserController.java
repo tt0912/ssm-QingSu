@@ -1,16 +1,15 @@
 package com.ssm.qs.controller;
 
 import com.ssm.qs.pojo.Info;
+import com.ssm.qs.pojo.Phone;
 import com.ssm.qs.pojo.User;
+import com.ssm.qs.service.PhoneService;
 import com.ssm.qs.service.UserService;
 import com.ssm.qs.util.Sendsms;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -30,10 +29,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PhoneService phoneService;
     //声明结果容器
     Map<String,Object> result = new HashMap<>();
-    //回调验证码
-    String mobileCode = null;
 
     /**
      * @param phone
@@ -48,15 +47,20 @@ public class UserController {
         //1.1 发送验证码
         Map<String,String> map = Sendsms.send(phone);
         String code = map.get("code");//状态码
-        mobileCode = map.get("mobile_code");//验证码
+        String mobileCode = map.get("mobile_code");//验证码
 
-        //1.2 验证码存表
+        //1.2 手机号+验证码存表
         System.out.println(code);
         System.out.println(mobileCode);
+        Phone phone1 = new Phone();
+        phone1.setPhone(phone);
+        phone1.setCode(mobileCode);
+        phoneService.addPhone(phone1);
 
+        //1.3 判断是否发送成功
         if("2".equals(code)){//验证码发送成功
             result.put("success",true);//请求成功
-            result.put("result",true);
+            result.put("result",true);//发送成功
             result.put("error",null);
         }else{//发送失败，手动抛出异常，全局异常进行处理
             throw new Exception("服务器繁忙");
@@ -64,10 +68,10 @@ public class UserController {
         return result;
     }
 
-    //2.验证码登录(局部)(已测试)
+    //2.验证码登录
     @RequestMapping("/code_login.html")
     @ResponseBody
-    public Map<String, Object> codeLogin(String phone, String code) throws Exception {
+    public Map<String, Object> codeLogin(String phone,String code) throws Exception {
 
         //1.二次校验
         if(phone==null || phone==""){
@@ -76,24 +80,27 @@ public class UserController {
         if(code==null || code==""){
             throw new Exception("请输入验证码！");
         }
-        if ("123".equals(code)) {//验证通过
-            //1.查
+
+        //2.验证码验证
+        long count = checkCode(phone,code);
+        if (count>0) {//验证通过
+            //查出用户信息
             User user = new User();
             user.setPhone(phone);
-            User user_find = userService.getUser(user);//查出的用户信息
+            User user_find = userService.getUser(user);
             int id = 0;
 
-            if (user_find == null) {//2.1 没有该用户信息，注册
+            if (user_find == null) {//没有该用户信息，注册
                 String name = "用户" + phone.substring(7);//用户6012
                 user.setUserName(name);
                 user.setNickName(name);
                 user.setRealName(name);
                 id = userService.addUser(user);//插入成功，返回id
-            }else{//2.1 直接登录
+            }else{//有用户信息，直接登录
                 id = user_find.getId();
             }
-            //3.票据对应id插入数据库
-            String ticket = UUID.randomUUID().toString().replaceAll("-","");
+            //时间戳票据对应id插入数据库
+            String ticket = System.currentTimeMillis()+"";
             Info info = new Info();
             info.setTicket(ticket);
             info.setUid(id);
@@ -101,11 +108,8 @@ public class UserController {
 
             //4.返回结果
             result.put("success",true);//请求成功
-
-            Map<String,Object> map = new HashMap<>();
+            Map<String,String> map = new HashMap<>();
             map.put("ticket",ticket);
-            map.put("uid",id);
-
             result.put("result",map);
             result.put("error",null);
             return result;
@@ -115,23 +119,23 @@ public class UserController {
     }
 
 
-    //3.密码登录(用户名，邮箱，手机号)(已测试)
+    //3.密码登录(用户名，邮箱，手机号)
     @RequestMapping("/pwd_login.html")
     @ResponseBody
     public Map<String,Object> pwdLogin(User user) throws Exception{
 
         //1.校验
-        if(user.getUserName()==null && user.getUserName()==""){
+        if(user.getUserName()==null || user.getUserName()==""){
             throw new Exception("用户名不能为空！");
         }
-        if(user.getPassword()==null && user.getPassword()==""){
+        if(user.getPassword()==null || user.getPassword()==""){
             throw new Exception("密码不能为空！");
         }
         //2.查数据库
         User user1 = userService.getUser(user);
         if(user1!=null){
             //3.票据对应id插入数据库
-            String ticket = UUID.randomUUID().toString().replaceAll("-","");
+            String ticket = System.currentTimeMillis()+"";
             Info info = new Info();
             info.setTicket(ticket);
             info.setUid(user1.getId());
@@ -139,11 +143,8 @@ public class UserController {
 
             //4.返回结果
             result.put("success",true);//请求成功
-
-            Map<String,Object> map = new HashMap<>();
+            Map<String,String> map = new HashMap<>();
             map.put("ticket",ticket);
-            map.put("uid", user1.getId());//对应用户id
-
             result.put("result",map);
             result.put("error",null);
             return result;
@@ -153,10 +154,10 @@ public class UserController {
     }
 
 
-    //4.忘记密码(设置新密码)(已测试)
+    //4.忘记密码(设置新密码)
     @RequestMapping("/forget_pwd.html")
     @ResponseBody
-    public Map<String, Object> update(String phone, String code, String password) throws Exception {
+    public Map<String, Object> update(String phone,String code,String password) throws Exception {
 
         if(phone==null || phone==""){
             throw new Exception("必须输入手机号");
@@ -167,7 +168,9 @@ public class UserController {
         if(password==null || password==""){
             throw new Exception("必须输入新密码");
         }
-        if(mobileCode.equals(code)) {//验证通过
+
+        long count = checkCode(phone,code);
+        if(count>0) {//验证通过
             User user = new User();
             user.setPhone(phone);//根据手机号修改密码，同样是唯一标识
             user.setPassword(password);
@@ -182,7 +185,8 @@ public class UserController {
     }
 
 
-    //5.退出登录(删数据库票据)(已测试)
+
+    //5.退出登录(删数据库票据)
     @RequestMapping("/logout.html")
     @ResponseBody
     public Map<String, Object> delete(String ticket) {
@@ -203,7 +207,6 @@ public class UserController {
 
         //1.根据票据查id;
         int id = userService.getUID(ticket);
-
         //2.根据id查全部数据
         User user1 = new User();
         user1.setId(id);
@@ -220,6 +223,7 @@ public class UserController {
     @RequestMapping("/upload_headUrl.html")
     @ResponseBody
     public Map<String, Object> upload(@RequestParam(value = "file") MultipartFile file) {
+
         try {
             FileUtils.copyInputStreamToFile(file.getInputStream(),
                     new File("E:/upload", file.getOriginalFilename()));
@@ -251,4 +255,14 @@ public class UserController {
         return result;
     }
 
+
+    //验证验证码
+    public long checkCode(String phone, String code){
+
+        Phone phoneDemo = new Phone();
+        phoneDemo.setPhone(phone);
+        phoneDemo.setCode(code);
+        long count = phoneService.checkCode(phoneDemo);
+        return count;
+    }
 }

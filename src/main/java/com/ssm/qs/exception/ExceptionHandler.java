@@ -26,7 +26,7 @@ public class ExceptionHandler implements HandlerExceptionResolver{
         //所有的请求都是ajax
         //if(isAjax(httpServletRequest)){
             Map<String,Object> result = new HashMap<>();
-            result.put("status",false);
+            result.put("success",false);
             result.put("error",e.getMessage());
             //配置json格式转换
             MappingJackson2JsonView jsonView = new MappingJackson2JsonView();

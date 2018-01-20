@@ -1,5 +1,7 @@
 package com.ssm.qs.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ssm.qs.dao.CouponDao;
 import com.ssm.qs.pojo.Coupon;
 import com.ssm.qs.pojo.Info;
@@ -16,8 +18,12 @@ public class CouponServiceImpl implements CouponService {
     private CouponDao couponDao;
 
     @Override
-    public List<Coupon> getCouponList() {
-        return couponDao.getCouponList();
+    public PageInfo<Coupon> getCouponList(int page, int rows) {
+
+        PageHelper.startPage(page,rows);
+        List<Coupon> couponList = couponDao.getCouponList();
+        PageInfo pageInfo = new PageInfo(couponList);
+        return pageInfo;
     }
 
     @Override
@@ -26,8 +32,12 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> showCoupon(String ticket) {
-        return couponDao.showCoupon(ticket);
+    public PageInfo<Coupon> showCoupon(String ticket,int page, int rows) {
+
+        PageHelper.startPage(page,rows);
+        List<Coupon> couponList = couponDao.showCoupon(ticket);
+        PageInfo<Coupon> pageInfo = new PageInfo<>(couponList);
+        return pageInfo;
     }
 
     @Override

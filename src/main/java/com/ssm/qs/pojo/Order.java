@@ -10,7 +10,9 @@ public class Order {
     private String orderNum;//订单编号
     private String tradeNum;//支付编号
     private Date payTime;//支付时间
+    private Date inDate;//入住时间
     private int day;//入住天数
+    private Date outDate;//离开时间
     private double discount;//折扣
     private double orginal;//原始金额
     private double actual;//实际金额

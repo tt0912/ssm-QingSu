@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="ssm-QingSu:war exploded">
-    <output-path>$PROJECT_DIR$/target/ssm_test19_tickets</output-path>
+  <artifact type="exploded-war" build-on-make="true" name="ssm-QingSu:war exploded">
+    <output-path>$PROJECT_DIR$/target/ssm-QingSu</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -45,7 +45,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/ssm_test19_tickets/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/ssm-QingSu/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="ssm-QingSu/web/Web" />
     </root>

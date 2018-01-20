@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("house")
+@RequestMapping("/api/house")
 public class HouseController {
 
     @Autowired
@@ -26,15 +26,11 @@ public class HouseController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("perRelease")
-    public String preRelease(){
-        return "/releaseHouse.jsp";
-    }
-
-    //查询所有房源信息，已经过测试
-    @RequestMapping("findAllHouse")
+    //1.查询所有房源信息
+    @RequestMapping("/findAllHouse.html")
     @ResponseBody
     public Map<String,Object> findAllHouse(){
+
         List<House> houses=houseService.findAllHouse();
         Map<String,Object> result=new HashMap<>();
         result.put("result", houses);
@@ -43,17 +39,19 @@ public class HouseController {
         return result;
     }
 
-    //搜索房源信息,模糊查询，已经过测试
-    @RequestMapping("selectHouse")
+
+    //2.搜索房源信息,模糊查询
+    @RequestMapping("/selectHouse.html")
     @ResponseBody
     public Map<String, Object> selectHouse(House house, @RequestParam(defaultValue = "1") Integer pageNum) {
+
         PageInfo<House> pageInfo = houseService.selectHouse(house, pageNum);
         Map<String,Object> result=new HashMap<>();
         if (pageInfo.getList().size() > 0) {
             result.put("result", pageInfo);
             result.put("success", true);
             result.put("error", null);
-            result.put("message","添加成功");
+            result.put("message","成功");
             return result;
         }
         result.put("success", false);
@@ -61,10 +59,12 @@ public class HouseController {
         return result;
     }
 
-    //查看房源信息，根据房源id精确查找，已经过测试
-    @RequestMapping("findHouseById")
+
+    //3.查看房源信息，根据房源id精确查找
+    @RequestMapping("/findHouseById.html")
     @ResponseBody
     public Map<String, Object> findById(Integer id) {
+
         House house = houseService.findHouseById(id);
         Map<String, Object> result = new HashMap<>();
         if (house != null) {
@@ -79,10 +79,12 @@ public class HouseController {
         return result;
     }
 
-    //添加房源信息，已经过测试
-    @RequestMapping("addHouse")
+
+    //4.发布房源
+    @RequestMapping("/addHouse.html")
     @ResponseBody
     public Map<String,Object> addHouse(House house,String ticket){
+
         Map<String,Object> result=new HashMap<>();
         //1.拿id
         int id = userService.getUID(ticket);
@@ -99,8 +101,9 @@ public class HouseController {
         return result;
     }
 
-    //收藏夹，用户收藏房源，已测试
-    @RequestMapping("addCollection")
+
+    //5.收藏夹，用户收藏房源，已测试
+    @RequestMapping("/addCollection.html")
     @ResponseBody
     public Map<String, Object> addCollection(Integer houseId,String ticket) {//前端隐藏域传用户点击收藏的房子的id，name=houseId
         Map<String, Object> result = new HashMap<>();
@@ -127,8 +130,9 @@ public class HouseController {
         return result;
     }
 
-    //展示收藏夹，展示用户收藏的内容，已测试
-    @RequestMapping("findCollection")
+
+    //6.展示收藏夹，展示用户收藏的内容，已测试
+    @RequestMapping("/findCollection.html")
     @ResponseBody
     public Map<String, Object> findCollection(String ticket) {
         Map<String, Object> result = new HashMap<>();
@@ -149,8 +153,9 @@ public class HouseController {
         return result;
     }
 
-    //用户浏览记录，将浏览记录保存到数据库中
-    @RequestMapping("addBrowse")
+
+    //7.用户浏览记录，将浏览记录保存到数据库中
+    @RequestMapping("/addBrowse.html")
     @ResponseBody
     public Map<String, Object> addBrowse(Integer houseId,String ticket) {//前端隐藏域传用户点击过的房子的id，name=houseId
         Map<String, Object> result = new HashMap<>();
@@ -177,8 +182,9 @@ public class HouseController {
         return result;
     }
 
-    //用户点击浏览记录，将用户查看过的房子的按照时间的降序顺序从数据库中回显出来
-    @RequestMapping("findBrowse")
+
+    //8.用户点击浏览记录，将用户查看过的房子的按照时间的降序顺序从数据库中回显出来
+    @RequestMapping("/findBrowse.html")
     @ResponseBody
     public Map<String, Object> findBrowse(String ticket) {
         Map<String, Object> result = new HashMap<>();
@@ -196,6 +202,19 @@ public class HouseController {
         }
         result.put("success", false);
         result.put("message", "查找失败");
+        return result;
+    }
+
+    //根据前端传过来的用户所在位置的经纬度查找附近的房源信息
+    @RequestMapping("/findHouseByLocation.html")
+    @ResponseBody
+    public Map<String,Object> findHouseByLocation(Double lat,Double lon){
+        Map<String,Object> result=new HashMap<>();
+        List<House> houseList=houseService.findHouseByLocation(lat,lon);
+        result.put("result",houseList);
+        result.put("success",true);
+        result.put("error",null);
+        result.put("message","查找成功");
         return result;
     }
 

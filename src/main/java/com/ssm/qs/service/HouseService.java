@@ -15,4 +15,6 @@ public interface HouseService {
 
     House findHouseById(Integer id);
 
+    List<House> findHouseByLocation(Double lat, Double lon);
+
 }

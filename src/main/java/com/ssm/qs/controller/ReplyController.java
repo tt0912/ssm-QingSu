@@ -42,7 +42,7 @@ public class ReplyController {
 
         FileUtils.copyInputStreamToFile(file.getInputStream(), new File(Reply_IMAGE_DIR, newFileName));
         result.put("success", true);
-        result.put("result", true);
+        result.put("result", "/upload/reply/"+newFileName);
         result.put("error", null);
         return result;
     }

@@ -14,4 +14,6 @@ public interface HouseDao {
     void addHouse(House house);
 
     House findHouseById(Integer id);
+
+    List<House> findHouseByLocation(Double lat, Double lon);
 }

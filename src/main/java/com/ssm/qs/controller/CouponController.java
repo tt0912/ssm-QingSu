@@ -1,5 +1,6 @@
 package com.ssm.qs.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.ssm.qs.pojo.Coupon;
 import com.ssm.qs.pojo.Info;
 import com.ssm.qs.service.CouponService;
@@ -29,11 +30,11 @@ public class CouponController {
     //1.分页展示所有优惠券
     @RequestMapping("/list_coupon.html")
     @ResponseBody
-    public Map<String, Object> list() {
+    public Map<String, Object> list(int page, int rows) {
 
-        List<Coupon> couponList = couponService.getCouponList();
+        PageInfo<Coupon> pageInfo = couponService.getCouponList(page,rows);
         result.put("success", true);
-        result.put("result", couponList);
+        result.put("result", pageInfo.getList());
         result.put("error", null);
         return result;
     }
@@ -57,11 +58,11 @@ public class CouponController {
     //3.展示“我的没过期的优惠券”
     @RequestMapping("/show_coupon.html")
     @ResponseBody
-    public Map<String, Object> show(String ticket) {
+    public Map<String, Object> show(String ticket,int page, int rows) {
 
-        List<Coupon> couponList = couponService.showCoupon(ticket);
+        PageInfo<Coupon> pageInfo = couponService.showCoupon(ticket,page,rows);
         result.put("success", true);
-        result.put("result", couponList);
+        result.put("result", pageInfo.getList());
         result.put("error", null);
         return result;
     }

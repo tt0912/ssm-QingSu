@@ -16,11 +16,6 @@
     </context:component-scan>
     <!--2.启动两大处理器-->
     <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"></mvc:annotation-driven>
-    <!--3.视图解析器-->
-    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/"></property>
-        <property name="suffix" value=".jsp"></property>
-    </bean>-->
     <!--4.多视图转换器-->
     <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="favorPathExtension" value="false"></property>
@@ -35,16 +30,17 @@
     <!--6.配置全局异常处理器-->
     <bean class="com.ssm.qs.exception.ExceptionHandler"></bean>
     <!--7.配置登录拦截器-->
-    <!--<mvc:interceptors>
+    <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
+            <!--放行的请求-->
             <mvc:exclude-mapping path="api/user/code_login.html"/>
             <mvc:exclude-mapping path="api/user/pwd_login.html"/>
             <mvc:exclude-mapping path="api/user/forget_pwd.html"/>
             <mvc:exclude-mapping path="api/user/send_login_code.html"/>
             <bean class="com.ssm.qs.interceptor.MyInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>-->
+    </mvc:interceptors>
 
     <!--8.文件解析器-->
     <!--8.1 扫描配置文件：resource-->

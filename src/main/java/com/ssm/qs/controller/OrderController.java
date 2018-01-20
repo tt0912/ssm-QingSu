@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/api/order")
@@ -15,14 +17,20 @@ public class OrderController {
 
     @Autowired
     private UserService userService;
+    //结果容器
+    Map<String,Object> result = new HashMap<>();
 
-    /*@RequestMapping("create_order.html")
+    //1.创建订单
+    @RequestMapping("/order_create.html")
     @ResponseBody
     public Map<String, Object> create(String ticket, Order order) {
 
-        //1.根据票据拿id
+        //1.根据票据拿userId
         int userId = userService.getUID(ticket);
         order.setUserId(userId);
-        return ;
-    }*/
+        //2.订单号
+        order.setOrderNum(UUID.randomUUID().toString().replaceAll("-",""));
+
+        return result;
+    }
 }

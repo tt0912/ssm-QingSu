@@ -39,4 +39,9 @@ public class HouseServiceImpl implements HouseService {
     public House findHouseById(Integer id) {
         return houseDao.findHouseById(id);
     }
+
+    @Override
+    public List<House> findHouseByLocation(Double lat, Double lon) {
+        return houseDao.findHouseByLocation(lat,lon);
+    }
 }

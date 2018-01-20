@@ -148,7 +148,7 @@
 
   <!--读取java/resources下的配置文件:mapper.xml-->
   <build>
-    <finalName>ssm_test19_tickets</finalName>
+    <finalName>ssm-QingSu</finalName>
     <resources>
       <resource>
         <directory>src/main/java</directory>

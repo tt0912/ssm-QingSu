@@ -19,7 +19,7 @@
         <association property="user" javaType="User">
             <id column="USER_ID" property="id"/>
             <result column="PHONE" property="phone"/>
-            <result column="USERNAME" property="userName"/>
+            <result column="USER_NAME" property="userName"/>
         </association>
     </resultMap>
 
@@ -27,14 +27,14 @@
 
     <select id="findAllHouse" resultMap="houseMap">
         SELECT h.ID,h.INTRODUCE,h.STYLE,h.CITY,h.STATUS,h.TITLE,h.HOUSE_URL,h.USER_ID,
-        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USERNAME
+        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USER_NAME
         FROM HOUSE h INNER JOIN USER u ON h.USER_ID=u.ID
     </select>
 
 
     <select id="selectHouse" parameterType="House" resultMap="houseMap">
         SELECT h.ID,h.INTRODUCE,h.STYLE,h.CITY,h.STATUS,h.TITLE,h.HOUSE_URL,h.USER_ID,
-        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USERNAME
+        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USER_NAME
         FROM HOUSE h INNER JOIN USER u ON h.USER_ID=u.ID
         <where>
             <if test="status!=null and status!=''">and h.STATUS=#{status}</if>
@@ -53,37 +53,37 @@
 
     <select id="findHouseById" parameterType="int" resultMap="houseMap">
         SELECT h.ID,h.INTRODUCE,h.STYLE,h.CITY,h.STATUS,h.TITLE,h.HOUSE_URL,h.USER_ID,
-        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USERNAME
+        h.LANDMARK,h.LON,h.LAT,u.PHONE,u.USER_NAME
         FROM HOUSE h INNER JOIN USER u ON h.USER_ID=u.ID
         WHERE h.ID=#{id}
     </select>
 
     <select id="findHouseByLocation" parameterType="House" resultMap="houseMap">
-        SELECT ID,INTRODUCE,STYLE,CITY,STATUS,TITLE,HOUSE_URL,USER_ID,LANDMARK,LON,LAT,
-        ROUND(6378.138 * 2 * ASIN(
+       SELECT ID,LANDMARK,INTRODUCE,STYLE,CITY,TITLE,HOUSE_URL,USER_ID,PRICE,LAT,LON,
+ROUND(
+    6378.138 * 2 * ASIN(
         SQRT(
-        POW(
-        SIN(
-        (
-        LAT * PI()/180-LAT * PI()/180
-        )/2
-        ),
-        2
-        )+COS(LAT * PI()/180 * COS(LAT * PI()/180) * POW(
-        SIN(
-        (
-        LON * PI()/180-LON * PI()/180
-        )/2
-        ),
-        2
-        ))
-        ) * 1000
-        ) AS JULI
-        FROM HOUSE HAVING JULI>500 ORDER BY JULI ASC LIMIT 10
-        <where>
-            <if test="lon!=null">LON=#{lon}</if>
-            <if test="lat!=null">AND LAT=#{lat}</if>
-        </where>
-    </select>
+            POW(
+                SIN(
+                    (
+                        #{lat} * PI() / 180 - lat * PI() / 180
+                    ) / 2
+                ),
+                2
+            ) + COS(#{lat} * PI() / 180) * COS(lat * PI() / 180) * POW(
+                SIN(
+                    (
+                        #{lon} * PI() / 180 - lon * PI() / 180
+                    ) / 2
+                ),
+                2
+            )
+        )
+    ) * 1000
+) AS juli
+  FROM house
+  HAVING juli>500
+  ORDER BY juli ASC LIMIT 5;
+</select>
 
 </mapper>

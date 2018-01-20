@@ -7,6 +7,7 @@ import com.ssm.qs.util.Sendsms;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,7 +22,7 @@ import java.util.UUID;
 /**
  *  Author 田宇
  *  Date   2018/1/11 0011 10:13
- *  Description restful风格地址
+ *  Description
  */
 @Controller
 @RequestMapping("/api/user")
@@ -34,16 +35,27 @@ public class UserController {
     //回调验证码
     String mobileCode = null;
 
-    //1.ajax请求发送验证码(已测试)
+    /**
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    //1.发送验证码
     @RequestMapping("/send_login_code.html")
     @ResponseBody
     public Map<String, Object> sendsms(String phone) throws Exception {
 
-        result.put("success",true);//请求成功
+        //1.1 发送验证码
         Map<String,String> map = Sendsms.send(phone);
         String code = map.get("code");//状态码
-        mobileCode = map.get("mobile_code");//发送的验证码
-        if("2".equals(code)){//验证码发送成功，存入session(默认30分钟有效)
+        mobileCode = map.get("mobile_code");//验证码
+
+        //1.2 验证码存表
+        System.out.println(code);
+        System.out.println(mobileCode);
+
+        if("2".equals(code)){//验证码发送成功
+            result.put("success",true);//请求成功
             result.put("result",true);
             result.put("error",null);
         }else{//发送失败，手动抛出异常，全局异常进行处理
@@ -193,13 +205,13 @@ public class UserController {
         int id = userService.getUID(ticket);
 
         //2.根据id查全部数据
-        User user = new User();
-        user.setId(id);
-        User user1 = userService.getUser(user);
-        System.out.println(user1);
+        User user1 = new User();
+        user1.setId(id);
+        User user = userService.getUser(user1);
+        System.out.println(user);
 
         result.put("success", true);
-        result.put("user", user1);
+        result.put("result", user);
         result.put("error", null);
         return result;
     }

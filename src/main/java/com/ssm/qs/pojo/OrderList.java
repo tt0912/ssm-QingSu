@@ -2,7 +2,7 @@ package com.ssm.qs.pojo;
 
 import java.util.Date;
 
-public class Order {
+public class OrderList {
 
     private Integer id;//订单id
     private Date createdDate;//下单时间
@@ -126,7 +126,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
+        return "OrderList{" +
                 "id=" + id +
                 ", createdDate=" + createdDate +
                 ", status=" + status +

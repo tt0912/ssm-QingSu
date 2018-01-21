@@ -22,7 +22,6 @@
         FROM USER
         <where>
             <if test="phone!=null and phone!=''">PHONE=#{phone}</if>
-            <if test="id!=null"> AND ID=#{id}</if>
             <if test="userName!=null and userName!=''">AND USER_NAME=#{userName}</if>
             <if test="password!=null and password!=''"> AND PASSWORD=#{password}</if>
         </where>
@@ -44,22 +43,22 @@
         SELECT UID FROM INFO WHERE TICKET=#{ticket}
     </select>
 
-    <!--5.更新密码，更新用户信息-->
+    <!--5.根据电话修改用户信息，根据电话修改密码-->
     <update id="updateUser" parameterType="User">
-        UPDATE USER
-        <set>
-            <if test="password!=null and password!=''">PASSWORD=#{password},</if>
-            <if test="nickName!=null and nickName!=''">NICK_NAME=#{nickName},</if>
-            <if test="realName!=null and realName!=''">REAL_NAME=#{realName},</if>
-            <if test="gender!=null and gender!=''">GENDER=#{gender},</if>
-            <if test="age!=null">AGE=#{age},</if>
-            <if test="nation!=null and nation!=''">NATION=#{nation},</if>
-            <if test="city!=null and city!=''">CITY=#{city},</if>
-            <if test="profession!=null and profession!=''">PROFESSION=#{profession},</if>
-            <if test="introduce!=null and introduce!=''">INTRODUCE=#{introduce},</if>
-            ID=#{id}
-        </set>
-        WHERE ID=#{id}
+    UPDATE USER
+    <set>
+        <if test="password!=null and password!=''">PASSWORD=#{password},</if>
+        <if test="nickName!=null and nickName!=''">NICK_NAME=#{nickName},</if>
+        <if test="realName!=null and realName!=''">REAL_NAME=#{realName},</if>
+        <if test="gender!=null and gender!=''">GENDER=#{gender},</if>
+        <if test="age!=null">AGE=#{age},</if>
+        <if test="nation!=null and nation!=''">NATION=#{nation},</if>
+        <if test="city!=null and city!=''">CITY=#{city},</if>
+        <if test="profession!=null and profession!=''">PROFESSION=#{profession},</if>
+        <if test="introduce!=null and introduce!=''">INTRODUCE=#{introduce},</if>
+        PHONE=#{phone}
+    </set>
+    WHERE PHONE=#{phone}
     </update>
 
     <!--6.退出登录-->

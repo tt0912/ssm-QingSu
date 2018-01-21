@@ -30,8 +30,9 @@ public class CouponController {
     //1.分页展示所有优惠券
     @RequestMapping("/list_coupon.html")
     @ResponseBody
-    public Map<String, Object> list(int page, int rows) {
-
+    public Map<String, Object> list(@RequestBody Map<String,Integer> param) {
+        int page = param.get("page");
+        int rows = param.get("rows");
         PageInfo<Coupon> pageInfo = couponService.getCouponList(page,rows);
         result.put("success", true);
         result.put("result", pageInfo.getList());
@@ -42,7 +43,7 @@ public class CouponController {
     //2.领取优惠券
     @RequestMapping("/gain_coupon.html")
     @ResponseBody
-    public Map<String, Object> gain(Info info) {
+    public Map<String, Object> gain(@RequestBody Info info) {
 
         //1.根据ticket查id
         int uid = userService.getUID(info.getTicket());
@@ -70,7 +71,7 @@ public class CouponController {
     //4.订单可以使用的优惠券
     @RequestMapping("/use_coupon.html")
     @ResponseBody
-    public Map<String, Object> use(Info info) {
+    public Map<String, Object> use(@RequestBody Info info) {
 
         List<Coupon> couponList = couponService.useCoupon(info);
         result.put("success", true);

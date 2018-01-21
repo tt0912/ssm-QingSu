@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="war" build-on-make="true" name="ssm-QingSu:war">
+  <artifact type="war" name="ssm-QingSu:war">
     <output-path>$PROJECT_DIR$/target</output-path>
     <root id="archive" name="ssm-QingSu.war">
       <element id="artifact" artifact-name="ssm-QingSu:war exploded" />

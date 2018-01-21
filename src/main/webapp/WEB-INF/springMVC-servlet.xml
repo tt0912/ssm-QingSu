@@ -30,17 +30,17 @@
     <!--6.配置全局异常处理器-->
     <bean class="com.ssm.qs.exception.ExceptionHandler"></bean>
     <!--7.配置登录拦截器-->
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <!--放行的请求-->
+            &lt;!&ndash;放行的请求&ndash;&gt;
             <mvc:exclude-mapping path="api/user/code_login.html"/>
             <mvc:exclude-mapping path="api/user/pwd_login.html"/>
             <mvc:exclude-mapping path="api/user/forget_pwd.html"/>
             <mvc:exclude-mapping path="api/user/send_login_code.html"/>
             <bean class="com.ssm.qs.interceptor.MyInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 
     <!--8.文件解析器-->
     <!--8.1 扫描配置文件：resource-->
@@ -50,4 +50,20 @@
         <property name="defaultEncoding" value="UTF-8"></property>
         <property name="resolveLazily" value="true"></property>
     </bean>
+
+    <!---->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>application/json;charset=utf-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
 </beans>

@@ -11,8 +11,47 @@
           4.优惠金额
           5.实际付款
           6.使用的优惠券:couponId-->
-    <insert id="addOrder" parameterType="Order" keyProperty="id" useGeneratedKeys="true">
+    <!--<insert id="addOrder" parameterType="OrderList" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO ORDER(USER_ID,CREATED_DATE,IN_DATE,OUT_DATE,DAY,ORDER_NUM,ORGINAL,DISCOUNT,ACTUAL,COUPON_ID,HOUSE_ID)
         VALUES (#{userId},now(),#{inDate},#{outDate},#{day},#{orderNum},#{orginal},#{discount},#{actual},#{couponId},#{houseId})
+    </insert>-->
+    <resultMap id="orderMap" type="OrderList">
+        <id column="ID" property="id"/>
+        <result column="CREATED_DATE" property="createdDate"/>
+        <result column="STATUS" property="status"/>
+        <result column="ORDER_NUM" property="orderNum"/>
+        <result column="TRADE_NUM" property="tradeNum"/>
+        <result column="PAY_TIME" property="payTime"/>
+        <result column="IN_DATE" property="inDate"/>
+        <result column="OUT_DATE" property="outDate"/>
+        <result column="DAY" property="day"/>
+        <result column="DISCOUNT" property="discount"/>
+        <result column="ORGINAL" property="orginal"/>
+        <result column="ACTUAL" property="actual"/>
+        <result column="USER_ID" property="userId"/>
+        <result column="COUPON_ID" property="couponId"/>
+        <result column="HOUSE_ID" property="houseId"/>
+    </resultMap>
+
+    <insert id="addOrder" parameterType="OrderList" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO ORDER(STATUS,USER_ID,CREATED_DATE,IN_DATE,OUT_DATE,DAY,ORDER_NUM,ORGINAL,DISCOUNT,ACTUAL,COUPON_ID,HOUSE_ID)
+        VALUES (1,#{userId},now(),#{inDate},#{outDate},#{day},#{orderNum},#{orginal},#{discount},#{actual},#{couponId},#{houseId})
     </insert>
+
+    <select id="fingAllOrder" parameterType="int" resultMap="orderMap">
+        SELECT ID,CREATED_DATE,STATUS,ORDER_NUM,TRADE_NUM,PAY_TIME,IN_DATE,OUT_DATE,DAY,DISCOUNT,ORGINAL,ACTUAL,COUPON_ID,HOUSE_ID
+        FROM ORDER
+        WHERE USER_ID=#{userId}
+    </select>
+
+    <update id="uplodaOrder" parameterType="int">
+        update orderlist set STATUS = 2
+        where ID=#{id}
+    </update>
+
+    <!--删除订单，设置状态为0-->
+    <update id="deleteOrder" parameterType="int">
+        update orderlist set STATUS = 0
+        where ID=#{id}
+    </update>
 </mapper>

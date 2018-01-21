@@ -8,8 +8,8 @@ package com.ssm.qs.pojo;
 public class Phone {
 
     private Integer id;
-    private Integer userId;
-    private Integer code;
+    private String phone;
+    private String code;
 
     public Integer getId() {
         return id;
@@ -19,19 +19,19 @@ public class Phone {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -39,8 +39,8 @@ public class Phone {
     public String toString() {
         return "Phone{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", code=" + code +
+                ", phone='" + phone + '\'' +
+                ", code='" + code + '\'' +
                 '}';
     }
 }

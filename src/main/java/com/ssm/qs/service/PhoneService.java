@@ -1,13 +1,8 @@
-package com.ssm.qs.dao;
+package com.ssm.qs.service;
 
 import com.ssm.qs.pojo.Phone;
 
-/**
- *  Author 田宇
- *  Date   2018/1/20 0020 14:40
- *  Description 插入、删除
- */
-public interface PhoneDao {
+public interface PhoneService {
 
     //1.插入
     void addPhone(Phone phone);
